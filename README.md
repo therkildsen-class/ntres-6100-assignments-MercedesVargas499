@@ -14,10 +14,12 @@ Please use the following table to grade the student's assignment:
 |:-----------:|:---------------:|:-------------------:|:-------------:|
 |      1      |        X        |                     |               |
 |      2      |        X        |                     |               |
-|      3      |                 |                     |               |Assignment URL: https://mercedesvargas499.github.io/assignment-3-mv499/
+|      3      |                 |                     |               |
 |      4      |                 |                     |               |
 |      5      |                 |                     |               |
 |      6      |                 |                     |               |
 |      7      |                 |                     |               |
 |      8      |                 |                     |               |
 |      9      |                 |                     |               |
+
+Assignment 3 URL: https://mercedesvargas499.github.io/assignment-3-mv499/
