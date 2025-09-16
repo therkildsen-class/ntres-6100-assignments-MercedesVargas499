@@ -14,7 +14,7 @@ Please use the following table to grade the student's assignment:
 |:-----------:|:---------------:|:-------------------:|:-------------:|
 |      1      |                 |                     |               |
 |      2      |                 |                     |               |
-|      3      |                 |                     |               |
+|      3      |                 |                     |               | Assignment 3: https://mercedesvargas499.github.io/assignment-3-mv499/
 |      4      |                 |                     |               |
 |      5      |                 |                     |               |
 |      6      |                 |                     |               |
