@@ -12,9 +12,9 @@ Please use the following table to grade the student's assignment:
 
 | Assignment# | Fully completed | Partially completed | Not completed |
 |:-----------:|:---------------:|:-------------------:|:-------------:|
-|      1      |                 |                     |               |
-|      2      |                 |                     |               |
-|      3      |                 |                     |               | Assignment 3: https://mercedesvargas499.github.io/assignment-3-mv499/
+|      1      |        X        |                     |               |
+|      2      |        X        |                     |               |
+|      3      |                 |                     |               |Assignment URL: https://mercedesvargas499.github.io/assignment-3-mv499/
 |      4      |                 |                     |               |
 |      5      |                 |                     |               |
 |      6      |                 |                     |               |
