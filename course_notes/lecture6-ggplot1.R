@@ -34,4 +34,5 @@ ggplot(data=mpg, mapping=aes(x=displ, y=hwy))+
   facet_wrap(~year,nrow=2)+
   theme_classic()
 
+ggsave(filename = "Plots/hwy_vs_displ.png")
   
