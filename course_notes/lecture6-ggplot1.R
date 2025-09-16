@@ -1,5 +1,5 @@
 library(tidyverse)
-
+library(ggplot2)
 mpg
 ggplot(data=mpg)+
   geom_point(mapping = aes(x=displ, y=hwy, color=class, size=cyl), shape=5)
@@ -34,5 +34,5 @@ ggplot(data=mpg, mapping=aes(x=displ, y=hwy))+
   facet_wrap(~year,nrow=2)+
   theme_classic()
 
-ggsave(filename = "Plots/hwy_vs_displ.png")
+ggsave( filename = "course_notes/Plots/hwy_vs_displ.pdf")
   
