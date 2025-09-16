@@ -5,4 +5,6 @@ it's better to save the plot with code, that way you can always tell how you
 got tha plot, if you cleaned data or whatever you did
 se usa el codigo
 ggsave(filename = "hwy_vs_displ.png")
-se ouede cambiar el png por cualquier tipo de archivo que yo quiera
+se puede cambiar el png por cualquier tipo de archivo que yo quiera
+
+Si funciona mal deberias ir a session -> restart R
