@@ -1,0 +1,125 @@
+---
+title: "wrangling2"
+format: html
+---
+
+select()
+
+Sirve para elegir columnas.
+
+No cambia los datos, solo reduce el número de columnas.
+
+Ejemplo:
+
+coronavirus |> 
+  select(country, cases)
+
+
+👉 Te quedás con dos columnas (country y cases), pero sigue habiendo una fila por cada fecha/registro.
+
+🔹 group_by()
+
+Sirve para agrupar las filas por una o más variables.
+
+No hace ningún cálculo por sí solo, pero prepara el terreno para que funciones como summarise(), mean(), sum(), etc. se apliquen dentro de cada grupo.
+
+Ejemplo:
+
+coronavirus |> 
+  group_by(country)
+
+
+👉 Ahora R sabe que “cada país es un grupo”.
+
+🔹 La combinación con summarise()
+
+Cuando vos escribís:
+
+coronavirus |> 
+  filter(type == "death", country %in% c("Canada","US","Mexico")) |>
+  group_by(country) |>
+  summarise(total_cases = sum(cases, na.rm = TRUE))
+
+
+group_by(country) → junta todas las filas por país
+
+summarise(total_cases = sum(cases)) → calcula la suma de casos dentro de cada país
+
+El resultado es un dataset chiquito con una fila por país, y la suma de casos totales.
+
+👉 Si usaras solo select(country, cases), te quedarías con la lista de casos por fecha y país, pero no tendrías la suma total por país.
+Por eso group_by() + summarise() es lo correcto cuando querés colapsar muchas filas en un valor agregado por grupo (suma, promedio, máximo, etc.).
+
+
+
+VACCINATION EXAMPLE
+
+vacc <- read_csv("https://raw.githubusercontent.com/RamiKrispin/coronavirus/main/csv/covid19_vaccine.csv")
+
+vacc|> 
+  filter(date==max(date))|>
+  select(country_region,continent_name, people_at_least_one_dose,population)|>
+  mutate(vaxxrate=people_at_least_one_dose/population,1)|>
+  view()
+  
+  🔹 ¿Qué hace mutate() en general?
+
+Crea o modifica columnas en un dataframe.
+
+La sintaxis es:
+
+mutate(nueva_columna = cálculo, ...)
+
+
+El cálculo puede usar columnas existentes, números, funciones, etc.
+
+🔹 En tu ejemplo:
+vacc |> 
+  filter(date == max(date)) |> 
+  select(country_region, continent_name, people_at_least_one_dose, population) |> 
+  mutate(vaxxrate = people_at_least_one_dose / population, 1) |> 
+  view()
+
+
+people_at_least_one_dose / population
+→ calcula la proporción de gente vacunada con al menos una dosis sobre la población total.
+
+mutate(vaxxrate = ...)
+→ crea una nueva columna llamada vaxxrate que contiene ese resultado.
+
+El , 1 que aparece al final en tu código parece un error de sintaxis (no debería estar ahí). Probablemente quisiste escribir:
+
+mutate(vaxxrate = people_at_least_one_dose / population)
+
+🔹 Ejemplo chiquito:
+df <- tibble(
+  pais = c("A", "B"),
+  dosis = c(50, 80),
+  poblacion = c(100, 200)
+)
+
+df |> mutate(vaxxrate = dosis / poblacion)
+
+
+👉 Resultado:
+
+pais	dosis	poblacion	vaxxrate
+A	50	100	0.50
+B	80	200	0.40
+
+Resumiendo:
+✅ mutate() te permite agregar variables nuevas calculadas a partir de las existentes (como el % de vacunación).
+
+
+ARRANGE()
+
+El signo - delante de vaxxrate indica que quieres ordenar de mayor a menor.
+
+Si pusieras solo arrange(vaxxrate), se ordenaría de menor a mayor.
+
+Entonces, después de calcular vaxxrate (la proporción de personas con al menos una dosis), arrange(-vaxxrate) ordena los países de más vacunados a menos vacunados.
+
+En resumen: arrange() organiza las filas del tibble según la(s) columna(s) que le pases.
+
+
+
