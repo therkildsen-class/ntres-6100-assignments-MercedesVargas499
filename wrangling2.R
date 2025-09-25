@@ -196,11 +196,44 @@ coronavirus |>
   ggplot()+
   geom_line(mapping = aes(x=date,y=total_daily_count))
 
-  
-coronavirus |> 
+## aca se agrega top5_countries con <- para darle nombre a todo el codigo  
+top5_countries <- coronavirus |> 
   filter(type=="confirmed") |> 
   group_by(country) |> 
   summarise(total_daily_count=sum(cases)) |> 
   arrange(-total_daily_count) |> 
   head(5) |> 
   pull(country)
+
+
+## ahora quiero excluir algo de datos que no es para los 5 paises que salen del
+##codigo anterior
+coronavirus |> 
+  filter(type=="confirmed", country %in% top5_countries ) |> 
+  group_by(date,country) |> 
+  summarise(total_daily_count=sum(cases)) |> 
+  arrange(-total_daily_count) |> 
+  ggplot()+
+  geom_line(mapping = aes(x=date,y=total_daily_count, color = country))
+
+## aca quiero que los casos sean mayor a 0
+coronavirus |> 
+  filter(type=="confirmed", country %in% top5_countries, cases >= 0 ) |> 
+  group_by(date,country) |> 
+  summarise(total_daily_count=sum(cases)) |> 
+  arrange(-total_daily_count) |> 
+  ggplot()+
+  geom_line(mapping = aes(x=date,y=total_daily_count, color = country))
+
+
+## aca quiero separar los graficos por pais
+coronavirus |> 
+  filter(type=="confirmed", country %in% top5_countries, cases >= 0 ) |> 
+  group_by(date,country) |> 
+  summarise(total_daily_count=sum(cases)) |> 
+  arrange(-total_daily_count) |> 
+  ggplot()+
+  geom_line(mapping = aes(x=date,y=total_daily_count, color = country)) +
+  facet_wrap(~country, ncol(1))
+
+
