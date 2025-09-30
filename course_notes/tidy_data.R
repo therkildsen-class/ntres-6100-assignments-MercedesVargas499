@@ -1,4 +1,5 @@
 library(tidyverse)
+library(skimr)
 table1
 table2
 table3
@@ -83,3 +84,22 @@ table5 |>
         century,
         year,
         sep="")
+
+coronavirus <- read_csv("https://raw.githubusercontent.com/RamiKrispin/coronavirus/refs/heads/main/csv/coronavirus.csv")
+
+coronavirus |>
+  filter(cases > 0) |> 
+  group_by(date, type) |>
+  summarize(cases = sum(cases)) |>
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type))
+
+coronavirus |> 
+  filter(cases > 0, country == "US") |> 
+  ggplot() +
+  geom_line(aes(x = date, y = cases, color = type))
+
+corona_wide <- coronavirus |> 
+  pivot_wider(names_from = type, values_from = cases) |> 
+  view(corona_wide)  ##no me da ver luego
+
