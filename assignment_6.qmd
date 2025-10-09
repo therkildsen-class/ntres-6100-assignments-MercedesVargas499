@@ -91,7 +91,7 @@ view(weather_clean1)
 ```{r}
 weather_clean2 <- weather_clean1 |>
   mutate(value = ifelse(value == "NR", "0", value)) |>
-  mutate(hour = parse_time(paste0(hour, ":00:00")))
+  mutate(hour = parse_number(hour))
 view(weather_clean2)
 ```
 
@@ -128,4 +128,34 @@ weather_clean3 |>
   labs(x = "date",
        y = "daily_average_ambient_temp") +
   theme_minimal()
+```
+
+### 2.5
+
+```{r}
+weather_clean3 |>
+  mutate(RAINFALL = parse_number(RAINFALL)) |>
+  mutate(month = month(date)) |>
+  group_by(month) |>
+  summarize(MonthlyRainfall = sum(RAINFALL, na.rm = TRUE)) |>
+  ggplot(aes(x = month, y = MonthlyRainfall)) +
+  geom_col() +
+  labs(x = "month",
+       y = "MonthlyRainfall") +
+  theme_minimal()
+```
+
+### 2.6
+
+```{r}
+weather_clean3 |>
+  filter(between(date, as.Date("2015-09-01"), as.Date("2015-09-07"))) |>
+  mutate(
+    PM2.5 = parse_number(PM2.5),
+    datetime = parse_date_time(paste(date, hour), orders = "ymd H")) |>
+  ggplot(aes(x = datetime, y = PM2.5)) +
+  geom_line() +
+  labs(x = "time", y = "PM2.5") +
+  theme_minimal()
+
 ```
