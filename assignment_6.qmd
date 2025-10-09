@@ -1,0 +1,131 @@
+---
+title: "assignment_6"
+format: gfm
+---
+
+```{r}
+library(tidyverse)
+library(knitr)
+```
+
+## **Exercise 1. Tibble and Data Import**
+
+### **1.1**
+
+```{r}
+tribble(
+  ~a, ~b, ~c,
+  1, 2.1, "apple",
+  2, 3.2, "orange"
+)
+```
+
+```{r}
+tibble(
+a = c(1, 2),
+b = c(2.1, 3.2),
+c = c("apple", "orange")
+)
+```
+
+### **1.2**
+
+```{r}
+dataset2 <- read_csv("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/master/datasets/dataset2.txt",
+                       col_names = c("Name", "Weight", "Price"))
+                       
+dataset2
+```
+
+### **1.3**
+
+```{r}
+dataset3 <- read_csv("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/master/datasets/dataset3.txt",
+                       col_names = c("Name", "Weight", "Price"),
+                      )
+
+dataset3
+```
+
+```{r}
+dataset3.1 <- read_delim("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/master/datasets/dataset3.txt",
+                         delim = ";", 
+                         skip = 2,
+                         na = c("?", "Not Available"),
+                       col_names = c("Name", "Weight", "Price"),
+                      )
+
+dataset3.1
+```
+
+## **Exercise 2. Weather station**
+
+### 2.1
+
+```{r}
+
+weather_notes <- read_delim("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/master/datasets/2015y_Weather_Station_notes.txt",
+                delim = "-"                          )
+
+weather_notes |>
+  kable()
+```
+
+### 2.2
+
+```{r}
+weather <- read_csv("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/master/datasets/2015y_Weather_Station.csv")
+view(weather)
+
+```
+
+```{r}
+weather_clean1 <- weather |>
+  pivot_longer(cols = `00`:`23`, 
+               names_to = "hour", 
+               values_to = "value",
+               values_transform = list(value = as.character))
+view(weather_clean1)
+```
+
+```{r}
+weather_clean2 <- weather_clean1 |>
+  mutate(value = ifelse(value == "NR", "0", value)) |>
+  mutate(hour = parse_time(paste0(hour, ":00:00")))
+view(weather_clean2)
+```
+
+```{r}
+weather_clean3 <- weather_clean2 |> 
+pivot_wider(names_from = item, 
+              values_from = value) |> 
+   mutate(AMB_TEMP = parse_double(AMB_TEMP))
+weather_clean3 |>
+head(6)
+view(weather_clean3)
+```
+
+### 2.3
+
+```{r}
+weather_clean3 |>
+  filter(date == as.Date("2015-09-25")) |>
+  ggplot(aes(x = hour, y = AMB_TEMP, group = 1)) +
+  geom_line() +
+  labs(x = "hour",
+       y = "AMB_TEMP") +
+  theme_minimal()
+```
+
+### 2.4
+
+```{r}
+weather_clean3 |>
+  group_by(date) |>
+  summarize(daily_average_ambient_temp = mean(AMB_TEMP, na.rm = TRUE)) |>
+  ggplot(aes(x = date, y = daily_average_ambient_temp)) +
+  geom_line() +
+  labs(x = "date",
+       y = "daily_average_ambient_temp") +
+  theme_minimal()
+```

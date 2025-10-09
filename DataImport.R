@@ -56,3 +56,20 @@ msa_clean <- clean_names(msa, case = "upper_camel") |>
 
 
 parse_number("$100") ## esto saca los valores no numéricos
+
+parse_double("1,23", locale = locale(decimal_mark = ",")) ##esto es para avisar que el numero decimal se indica con , y te lo pasa a .
+
+parse_number("123,456,789", locale = locale(grouping_mark = ","))
+
+
+
+mess = read_tsv("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/refs/heads/main/datasets/messy_data.tsv", locale = locale(decimal_mark = ","))
+view(mess)
+
+mess <- read_tsv("https://raw.githubusercontent.com/nt246/NTRES-6100-data-science/refs/heads/main/datasets/messy_data.tsv",
+                 col_types = cols(.default = "c"),
+                 locale = locale(decimal_mark = ","),
+                 na = c("Missing", "N/A")) 
+
+view(mess)
+
