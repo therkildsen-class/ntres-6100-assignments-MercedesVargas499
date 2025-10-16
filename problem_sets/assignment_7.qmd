@@ -1,0 +1,85 @@
+---
+title: "assignment_7"
+output: gfm
+---
+```{r}
+library(tidyverse)
+library(knitr)
+##install.packages("dslabs")
+library(dslabs)
+```
+
+#Excercise: 2016 election result and polling
+
+```{r}
+view(murders) 
+view(results_us_election_2016)
+view(polls_us_election_2016)
+
+votes <- read_csv("https://raw.githubusercontent.com/kshaffer/election2016/master/2016ElectionResultsByState.csv")
+view(votes)
+```
+
+##Question 1. 
+
+###1a.What is the relationship between the population size and the number of electoral votes each state has?
+
+```{r}
+q_1a <- murders |>
+  left_join(results_us_election_2016, 
+            join_by(state))
+
+head(q_1a) 
+```
+
+###1b. Add a new variable in the q_1a dataset to indicate which candidate won in each state, and remove the columns abb, region, and total. Name this new dataset q_1b, and show its first 6 rows.
+
+```{r}
+q_1b <- q_1a |> 
+   mutate(winner = case_when(
+    clinton > trump ~ "clinton",
+    trump > clinton ~ "trump",
+    TRUE ~ "tie"
+  )) |>
+  select(-abb, -region, -total)
+
+head(q_1b) 
+```
+
+###1c. Using the q_1b dataset, plot the relationship between population size and number of electoral votes. Use color to indicate who won the state. Fit a straight line to the data, set its color to black, size to 0.1, and turn off its confidence interval.
+
+```{r}
+ggplot(q_1b, aes(x = population, y = electoral_votes, color = winner)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "black", size = 0.1) +
+  labs(x = "Population", 
+       y = "Electoral Votes",
+       title = "Relationship between Population and Electoral Votes",
+       color = "Winner") +
+  theme_minimal()
+```
+##Question 2. Would the election result be any different if the number of electoral votes is exactly proportional to a state’s population size?
+
+###2a. First, convert the q_1b dataset to longer format such that the population and electoral_votes columns are turned into rows as shown below. Name this new dataset q_2a, and show its first 6 rows.
+
+```{r}
+q_2a <- q_1b |>
+  pivot_longer(cols = c(population, electoral_votes),
+               names_to = "metric",
+               values_to = "value")
+head(q_2a)
+```
+
+###2b. Then, sum up the number of electoral votes and population size across all states for each candidate. Name this new dataset q_2b, and print it as shown below.
+
+```{r}
+q_2b <- q_2a |>
+  group_by(metric, winner) |>
+  summarize(value = sum(value), .groups = "drop")
+print(q_2b)
+```
+###2c. Use the q_2b dataset to contruct a bar plot to show the final electoral vote share under the scenarios of 1) each state has the number of electoral votes that it currently has, and 2) each state has the number of electoral votes that is exactly proportional to its population size. Here, assume that for each state, the winner will take all its electoral votes.
+
+
+
+
